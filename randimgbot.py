@@ -6,8 +6,7 @@ from __future__ import print_function, unicode_literals
 import argparse
 import os
 import random
-from twitter import *  # pip install twitter
-import urllib
+from twitter import Twitter, OAuth  # pip install twitter
 import yaml
 import webbrowser
 
@@ -18,7 +17,7 @@ def load_yaml(filename):
     data = yaml.safe_load(f)
     f.close()
     if not data.viewkeys() >= {'oauth_token', 'oauth_token_secret',
-                              'consumer_key', 'consumer_secret'}:
+                               'consumer_key', 'consumer_secret'}:
         sys.exit("Twitter credentials missing from YAML: " + filename)
     return data
 
@@ -31,7 +30,7 @@ def random_img(dirname):
     # Get a list of matching images, full path
     matches = glob.glob(spec)
     print("Found", len(matches), "images")
-    
+
     # Pick a random image from the list
     random_image = random.choice(matches)
     print("Random image:", random_image)
@@ -83,7 +82,8 @@ def tweet_it(string, img, credentials):
         with open(img, "rb") as imagefile:
             params = {"media[]": imagefile.read(), "status": string}
             result = t.statuses.update_with_media(**params)
-            url = "https://twitter.com/" + result['user']['screen_name'] + "/status/" + result['id_str']
+            url = ("https://twitter.com/" + result['user']['screen_name'] +
+                   "/status/" + result['id_str'])
             print("Tweeted:\n" + url)
             if not args.no_web:
                 # 2 = open in a new tab, if possible
@@ -94,15 +94,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Pick a random image and tweet it",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('-y', '--yaml',
+    parser.add_argument(
+        '-y', '--yaml',
         default='M:/bin/data/randimgbot.yaml',
         help="YAML file location containing Twitter keys and secrets")
-    parser.add_argument('-d', '--dir', 
+    parser.add_argument(
+        '-d', '--dir',
         default='M:/randomimages/',
         help="Directory containing images to tweet at random")
-    parser.add_argument('-x', '--test', action='store_true',
+    parser.add_argument(
+        '-x', '--test', action='store_true',
         help="Test mode: don't tweet")
-    parser.add_argument('-nw', '--no-web', action='store_true',
+    parser.add_argument(
+        '-nw', '--no-web', action='store_true',
         help="Don't open a web browser to show the tweeted tweet")
     args = parser.parse_args()
 
@@ -111,10 +115,10 @@ if __name__ == "__main__":
     img = random_img(args.dir)
 
     name = name_from_filename(img)
-    
-    tweet = "Random image: " + name  + " #randimgbot"
+
+    tweet = "Random image: " + name + " #randimgbot"
     print("Tweet this:\n", tweet)
-    
+
     tweet_it(tweet, img, twitter_credentials)
 
 # End of file
