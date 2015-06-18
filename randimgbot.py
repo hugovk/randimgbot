@@ -6,6 +6,7 @@ from __future__ import print_function, unicode_literals
 import argparse
 import os
 import random
+import sys
 from twitter import Twitter, OAuth  # pip install twitter
 import yaml                         # pip install pyyaml
 import webbrowser
@@ -18,7 +19,6 @@ def load_yaml(filename):
     f.close()
     if not data.viewkeys() >= {'oauth_token', 'oauth_token_secret',
                                'consumer_key', 'consumer_secret'}:
-        import sys
         sys.exit("Twitter credentials missing from YAML: " + filename)
     return data
 
@@ -29,6 +29,9 @@ def random_img(spec):
     # Get a list of matching images, full path
     matches = glob.glob(spec)
     print("Found", len(matches), "images")
+
+    if not len(matches):
+        sys.exit("No files found matching " + spec)
 
     # Pick a random image from the list
     random_image = random.choice(matches)
