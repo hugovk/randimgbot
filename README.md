@@ -21,4 +21,4 @@ Run it
 
 Call something like:
 
-    randimgbot.py -y path/to/randimgbot.yaml -d path/to/dir/full/of/images
+    randimgbot.py -y path/to/randimgbot.yaml -i path/to/dir/full/of/images/*.jpg -t "Random thing: {0} #randomthing"
