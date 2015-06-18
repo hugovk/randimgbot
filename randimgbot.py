@@ -22,11 +22,9 @@ def load_yaml(filename):
     return data
 
 
-def random_img(dirname):
+def random_img(spec):
     """Find images (non-recursively) in dirname"""
     import glob
-    # Join the directory with a filespec
-    spec = os.path.join(dirname, "*.jpg")
     # Get a list of matching images, full path
     matches = glob.glob(spec)
     print("Found", len(matches), "images")
@@ -99,9 +97,16 @@ if __name__ == "__main__":
         default='M:/bin/data/randimgbot.yaml',
         help="YAML file location containing Twitter keys and secrets")
     parser.add_argument(
-        '-d', '--dir',
-        default='M:/randomimages/',
-        help="Directory containing images to tweet at random")
+        '-i', '--inspec',
+        type=unicode,
+        default='M:/randomimages/*.jpg',
+        help="Input file spec for directory containing images")
+    parser.add_argument(
+        '-t', '--template',
+        type=unicode,
+        default='Random image: {0} #randimgbot',
+        help="Tweet template, where {0} will be replaced with a name taken "
+             "from the filename")
     parser.add_argument(
         '-x', '--test', action='store_true',
         help="Test mode: don't tweet")
@@ -112,11 +117,11 @@ if __name__ == "__main__":
 
     twitter_credentials = load_yaml(args.yaml)
 
-    img = random_img(args.dir)
+    img = random_img(args.inspec)
 
     name = name_from_filename(img)
 
-    tweet = "Random image: " + name + " #randimgbot"
+    tweet = args.template.format(name)
     print("Tweet this:\n", tweet)
 
     tweet_it(tweet, img, twitter_credentials)
