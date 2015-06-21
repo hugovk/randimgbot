@@ -55,6 +55,11 @@ def name_from_filename(filename):
     return name
 
 
+def hashtagify(text):
+    """Remove spaces and prepend a hash"""
+    return "#" + text.replace(" ", "")
+
+
 def open_url(url):
     """Open URL in a web browser"""
     print(url)
@@ -108,9 +113,9 @@ if __name__ == "__main__":
     parser.add_argument(
         '-t', '--template',
         type=unicode,
-        default='Random image: {0} #randimgbot',
+        default='Random image: {0} #randimgbot {1}',
         help="Tweet template, where {0} will be replaced with a name taken "
-             "from the filename")
+             "from the filename, and {1} is a hashtag from the name")
     parser.add_argument(
         '-x', '--test', action='store_true',
         help="Test mode: don't tweet")
@@ -124,8 +129,9 @@ if __name__ == "__main__":
     img = random_img(args.inspec)
 
     name = name_from_filename(img)
+    hashtag = hashtagify(name)
 
-    tweet = args.template.format(name)
+    tweet = args.template.format(name, hashtag)
     print("Tweet this:\n", tweet)
 
     tweet_it(tweet, img, twitter_credentials)
