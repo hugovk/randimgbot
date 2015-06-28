@@ -25,6 +25,8 @@ Call something like:
 
 Where `{0}` will be replaced with a name taken from the filename, and `{1}` is a hashtag from the name. Either or both can be omitted.
 
+By default it will only tweet randomly 1/12 times. Change this denominator with `--chance`.
+
 Check full options with:
 
     python randimgbot.py -h

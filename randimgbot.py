@@ -117,12 +117,20 @@ if __name__ == "__main__":
         help="Tweet template, where {0} will be replaced with a name taken "
              "from the filename, and {1} is a hashtag from the name")
     parser.add_argument(
+        '-c', '--chance',
+        type=int, default=12,
+        help="Denominator for the chance of tweeting this time")
+    parser.add_argument(
         '-x', '--test', action='store_true',
         help="Test mode: don't tweet")
     parser.add_argument(
         '-nw', '--no-web', action='store_true',
         help="Don't open a web browser to show the tweeted tweet")
     args = parser.parse_args()
+
+    # Do we have a chance of tweeting this time?
+    if random.randrange(args.chance) > 0:
+        sys.exit("No tweet this time")
 
     twitter_credentials = load_yaml(args.yaml)
 
