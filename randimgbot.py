@@ -12,6 +12,11 @@ import yaml                         # pip install pyyaml
 import webbrowser
 
 
+# cmd.exe cannot do Unicode so encode first
+def print_it(text):
+    print(text.encode('utf-8'))
+
+
 def load_yaml(filename):
     """Load Twitter credentials from a YAML file"""
     f = open(filename)
@@ -35,7 +40,7 @@ def random_img(spec):
 
     # Pick a random image from the list
     random_image = random.choice(matches)
-    print("Random image:", random_image)
+    print_it("Random image: " + random_image)
     return random_image
 
 
@@ -51,7 +56,7 @@ def name_from_filename(filename):
 
     # Replace underscores with spaces
     name = name.replace("_", " ")
-    print(name)
+    print_it(name)
     return name
 
 
@@ -81,7 +86,7 @@ def tweet_it(string, img, credentials):
                            credentials['consumer_key'],
                            credentials['consumer_secret']))
 
-    print("TWEETING THIS:\n", string)
+    print_it("TWEETING THIS:\n" + string)
 
     if args.test:
         print("(Test mode, not actually tweeting)")
@@ -140,7 +145,7 @@ if __name__ == "__main__":
     hashtag = hashtagify(name)
 
     tweet = args.template.format(name, hashtag)
-    print("Tweet this:\n", tweet)
+    print_it("Tweet this:\n" + tweet)
 
     tweet_it(tweet, img, twitter_credentials)
 
