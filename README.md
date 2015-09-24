@@ -3,6 +3,11 @@ randimgbot
 
 Pick a random image and tweet it.
 
+Example
+-------
+
+Randimgbot powers **[@FlagFacts](https://twitter.com/FlagFacts)**.
+
 Set up
 ------
 
