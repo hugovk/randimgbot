@@ -11,6 +11,8 @@ from twitter import Twitter, OAuth  # pip install twitter
 import yaml                         # pip install pyyaml
 import webbrowser
 
+from pprint import pprint
+
 
 # cmd.exe cannot do Unicode so encode first
 def print_it(text):
@@ -28,23 +30,42 @@ def load_yaml(filename):
     return data
 
 
-def random_img(spec):
+def random_img_and_text(spec):
     """Find images (non-recursively) in dirname"""
     import glob
     # Get a list of matching images, full path
     matches = glob.glob(spec)
-    print("Found", len(matches), "images")
+
+    print("Found", len(matches))
 
     if not len(matches):
         sys.exit("No files found matching " + spec)
 
-    # Pick a random image from the list
-    random_image = random.choice(matches)
+    # Did we get a JSON of filenames and descriptions? e.g.
+    # {
+    #  "image1.jpg": "Description 1",
+    #  "image2.jpg": "Description 2\nLine 2"
+    # }
+
+    if len(matches) == 1 and matches[0].endswith(".json"):
+        print("JSON")
+        import json
+        with open(matches[0]) as data_file:
+            data = json.load(data_file)
+            pprint(data)
+            random_image = random.choice(data.keys())
+            text = data[random_image]
+    else:
+        # Pick a random image from the list
+        random_image = random.choice(matches)
+        text = text_from_filename(random_image)
+
     print_it("Random image: " + random_image)
-    return random_image
+
+    return random_image, text
 
 
-def name_from_filename(filename):
+def text_from_filename(filename):
     """Return 'abc def' from C:\dir\abc_def.jpg"""
 
     # Get filename without path
@@ -114,7 +135,8 @@ if __name__ == "__main__":
         '-i', '--inspec',
         type=unicode,
         default='M:/randomimages/*.jpg',
-        help="Input file spec for directory containing images")
+        help="Input file spec for directory containing images, "
+             "or a JSON file of 'image filename': 'description'")
     parser.add_argument(
         '-t', '--template',
         type=unicode,
@@ -139,12 +161,10 @@ if __name__ == "__main__":
 
     twitter_credentials = load_yaml(args.yaml)
 
-    img = random_img(args.inspec)
+    img, text = random_img_and_text(args.inspec)
+    hashtag = hashtagify(text)
 
-    name = name_from_filename(img)
-    hashtag = hashtagify(name)
-
-    tweet = args.template.format(name, hashtag)
+    tweet = args.template.format(text, hashtag)
     print_it("Tweet this:\n" + tweet)
 
     tweet_it(tweet, img, twitter_credentials)
