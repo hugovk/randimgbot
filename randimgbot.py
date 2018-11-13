@@ -184,7 +184,8 @@ if __name__ == "__main__":
 
     # Do we have a chance of tweeting this time?
     if random.randrange(args.chance) > 0:
-        sys.exit("No tweet this time")
+        print("No tweet this time")
+        sys.exit()
 
     twitter_credentials = load_yaml(args.yaml)
 
