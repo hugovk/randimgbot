@@ -2,7 +2,7 @@ randimgbot
 ==========
 
 [![Build Status](https://travis-ci.org/hugovk/python-ci-static-analysis.svg?branch=master)](https://travis-ci.org/hugovk/python-ci-static-analysis)
-[![Python: 2.7, 3.4+](https://img.shields.io/badge/python-2.7,_3.4+-blue.svg)](https://www.python.org/downloads/)
+[![Python: 3.4+](https://img.shields.io/badge/python-3.4+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 Pick a random image and tweet it.
@@ -19,24 +19,30 @@ Create and authorise an app with (read and) write access at:
 
 https://dev.twitter.com/apps/new
 
-Store credentials in YAML file. See data/randimgbot_example.yaml
+Store credentials in YAML file. See `data/randimgbot_example.yaml`.
 
 Install dependencies:
 
-    pip install twitter pyyaml
+```bash
+pip install twitter pyyaml
+```
 
 Run it
 ------
 
 Call something like:
 
-    python randimgbot.py -y path/to/randimgbot.yaml -i path/to/dir/full/of/images/*.jpg -t "Random thing: {0} #randomthing {1}"
+```bash
+python randimgbot.py -y path/to/randimgbot.yaml -i path/to/dir/full/of/images/*.jpg -t "Random thing: {0} #randomthing {1}"
+```
 
 Where `{0}` will be replaced with a name taken from the filename, and `{1}` is a hashtag from the name. Either or both can be omitted.
 
 Alternatively with a JSON file:
 
-    python randimgbot.py -y path/to/randimgbot.yaml -i data/randimgbot_example.json -t "Random thing: {0} #randomthing {1}"
+```bash
+python randimgbot.py -y path/to/randimgbot.yaml -i data/randimgbot_example.json -t "Random thing: {0} #randomthing {1}"
+```
 
 Where the JSON file looks something like data/randimgbot_example.json:
 
@@ -51,5 +57,6 @@ By default it will only tweet randomly 1/12 times. Change this denominator with 
 
 Check full options with:
 
-    python randimgbot.py -h
-
+```bash
+python randimgbot.py -h
+```

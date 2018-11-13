@@ -2,8 +2,6 @@
 """
 Pick a random image and tweet it
 """
-from __future__ import print_function, unicode_literals
-
 import argparse
 import datetime
 import json
@@ -22,18 +20,12 @@ def timestamp():
     print(datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p") + " " + __file__)
 
 
-# cmd.exe cannot do Unicode so encode first
-def print_it(text):
-    print(text.encode("utf-8"))
-
-
 def load_yaml(filename):
     """Load Twitter credentials from a YAML file"""
     with open(filename) as f:
         data = yaml.safe_load(f)
 
-    keys = data.viewkeys() if sys.version_info.major == 2 else data.keys()
-    if not keys >= {
+    if not data.keys() >= {
         "oauth_token",
         "oauth_token_secret",
         "consumer_key",
@@ -73,7 +65,7 @@ def random_img_and_text(spec):
         random_image = random.choice(matches)
         text = text_from_filename(random_image)
 
-    print_it("Random image: " + random_image)
+    print("Random image: " + random_image)
 
     return random_image, text
 
@@ -90,7 +82,7 @@ def text_from_filename(filename):
 
     # Replace underscores with spaces
     name = name.replace("_", " ")
-    print_it(name)
+    print(name)
     return name
 
 
@@ -124,7 +116,7 @@ def tweet_it(string, img, credentials):
         )
     )
 
-    print_it("TWEETING THIS:\n" + string)
+    print("TWEETING THIS:\n" + string)
 
     if args.test:
         print("(Test mode, not actually tweeting)")
@@ -161,7 +153,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "-i",
         "--inspec",
-        type=unicode if sys.version_info.major == 2 else str,  # noqa: F821
         default="M:/randomimages/*.jpg",
         help="Input file spec for directory containing images, "
         "or a JSON file of 'image filename': 'description'",
@@ -169,7 +160,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "-t",
         "--template",
-        type=unicode if sys.version_info.major == 2 else str,  # noqa: F821
         default="Random image: {0} #randimgbot {1}",
         help="Tweet template, where {0} will be replaced with a name taken "
         "from the filename, and {1} is a hashtag from the name",
@@ -202,7 +192,7 @@ if __name__ == "__main__":
     hashtag = hashtagify(text)
 
     tweet = args.template.format(text, hashtag)
-    print_it("Tweet this:\n" + tweet)
+    print("Tweet this:\n" + tweet)
 
     tweet_it(tweet, img, twitter_credentials)
 
