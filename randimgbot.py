@@ -3,27 +3,28 @@
 Pick a random image and tweet it
 """
 from __future__ import print_function, unicode_literals
+
 import argparse
 import datetime
+import json
 import os
 import random
 import sys
-from twitter import Twitter, OAuth  # pip install twitter
-import yaml                         # pip install pyyaml
 import webbrowser
-
 from pprint import pprint
+
+import yaml  # pip install pyyaml
+from twitter import OAuth, Twitter  # pip install twitter
 
 
 def timestamp():
     """ Print a timestamp and the filename with path """
-    print(datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p") + " " +
-          __file__)
+    print(datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p") + " " + __file__)
 
 
 # cmd.exe cannot do Unicode so encode first
 def print_it(text):
-    print(text.encode('utf-8'))
+    print(text.encode("utf-8"))
 
 
 def load_yaml(filename):
@@ -33,8 +34,10 @@ def load_yaml(filename):
 
     keys = data.viewkeys() if sys.version_info.major == 2 else data.keys()
     if not keys >= {
-        'oauth_token', 'oauth_token_secret',
-        'consumer_key', 'consumer_secret'
+        "oauth_token",
+        "oauth_token_secret",
+        "consumer_key",
+        "consumer_secret",
     }:
         sys.exit("Twitter credentials missing from YAML: " + filename)
     return data
@@ -43,6 +46,7 @@ def load_yaml(filename):
 def random_img_and_text(spec):
     """Find images (non-recursively) in dirname"""
     import glob
+
     # Get a list of matching images, full path
     matches = glob.glob(spec)
 
@@ -59,7 +63,6 @@ def random_img_and_text(spec):
 
     if len(matches) == 1 and matches[0].endswith(".json"):
         print("JSON")
-        import json
         with open(matches[0]) as data_file:
             data = json.load(data_file)
             pprint(data)
@@ -112,10 +115,14 @@ def tweet_it(string, img, credentials):
     # Create and authorise an app with (read and) write access at:
     # https://dev.twitter.com/apps/new
     # Store credentials in YAML file. See data/randimgbot_example.yaml
-    t = Twitter(auth=OAuth(credentials['oauth_token'],
-                           credentials['oauth_token_secret'],
-                           credentials['consumer_key'],
-                           credentials['consumer_secret']))
+    t = Twitter(
+        auth=OAuth(
+            credentials["oauth_token"],
+            credentials["oauth_token_secret"],
+            credentials["consumer_key"],
+            credentials["consumer_secret"],
+        )
+    )
 
     print_it("TWEETING THIS:\n" + string)
 
@@ -125,8 +132,12 @@ def tweet_it(string, img, credentials):
         with open(img, "rb") as imagefile:
             params = {"media[]": imagefile.read(), "status": string}
             result = t.statuses.update_with_media(**params)
-            url = ("https://twitter.com/" + result['user']['screen_name'] +
-                   "/status/" + result['id_str'])
+            url = (
+                "https://twitter.com/"
+                + result["user"]["screen_name"]
+                + "/status/"
+                + result["id_str"]
+            )
             print("Tweeted:\n" + url)
             if not args.no_web:
                 # 2 = open in a new tab, if possible
@@ -139,33 +150,46 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
         description="Pick a random image and tweet it",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
     parser.add_argument(
-        '-y', '--yaml',
-        default='M:/bin/data/randimgbot.yaml',
-        help="YAML file location containing Twitter keys and secrets")
+        "-y",
+        "--yaml",
+        default="M:/bin/data/randimgbot.yaml",
+        help="YAML file location containing Twitter keys and secrets",
+    )
     parser.add_argument(
-        '-i', '--inspec',
+        "-i",
+        "--inspec",
         type=unicode if sys.version_info.major == 2 else str,  # noqa: F821
-        default='M:/randomimages/*.jpg',
+        default="M:/randomimages/*.jpg",
         help="Input file spec for directory containing images, "
-             "or a JSON file of 'image filename': 'description'")
+        "or a JSON file of 'image filename': 'description'",
+    )
     parser.add_argument(
-        '-t', '--template',
+        "-t",
+        "--template",
         type=unicode if sys.version_info.major == 2 else str,  # noqa: F821
-        default='Random image: {0} #randimgbot {1}',
+        default="Random image: {0} #randimgbot {1}",
         help="Tweet template, where {0} will be replaced with a name taken "
-             "from the filename, and {1} is a hashtag from the name")
+        "from the filename, and {1} is a hashtag from the name",
+    )
     parser.add_argument(
-        '-c', '--chance',
-        type=int, default=12,
-        help="Denominator for the chance of tweeting this time")
+        "-c",
+        "--chance",
+        type=int,
+        default=12,
+        help="Denominator for the chance of tweeting this time",
+    )
     parser.add_argument(
-        '-x', '--test', action='store_true',
-        help="Test mode: don't tweet")
+        "-x", "--test", action="store_true", help="Test mode: don't tweet"
+    )
     parser.add_argument(
-        '-nw', '--no-web', action='store_true',
-        help="Don't open a web browser to show the tweeted tweet")
+        "-nw",
+        "--no-web",
+        action="store_true",
+        help="Don't open a web browser to show the tweeted tweet",
+    )
     args = parser.parse_args()
 
     # Do we have a chance of tweeting this time?
