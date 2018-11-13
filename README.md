@@ -24,7 +24,7 @@ Store credentials in YAML file. See `data/randimgbot_example.yaml`.
 Install dependencies:
 
 ```bash
-pip install twitter pyyaml
+pip install -r requirements.txt
 ```
 
 Run it
