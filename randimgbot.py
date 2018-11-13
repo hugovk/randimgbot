@@ -4,6 +4,7 @@ Pick a random image and tweet it
 """
 from __future__ import print_function, unicode_literals
 import argparse
+import datetime
 import os
 import random
 import sys
@@ -14,6 +15,12 @@ import webbrowser
 from pprint import pprint
 
 
+def timestamp():
+    """ Print a timestamp and the filename with path """
+    print(datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p") + " " +
+          __file__)
+
+
 # cmd.exe cannot do Unicode so encode first
 def print_it(text):
     print(text.encode('utf-8'))
@@ -21,11 +28,14 @@ def print_it(text):
 
 def load_yaml(filename):
     """Load Twitter credentials from a YAML file"""
-    f = open(filename)
-    data = yaml.safe_load(f)
-    f.close()
-    if not data.viewkeys() >= {'oauth_token', 'oauth_token_secret',
-                               'consumer_key', 'consumer_secret'}:
+    with open(filename) as f:
+        data = yaml.safe_load(f)
+
+    keys = data.viewkeys() if sys.version_info.major == 2 else data.keys()
+    if not keys >= {
+        'oauth_token', 'oauth_token_secret',
+        'consumer_key', 'consumer_secret'
+    }:
         sys.exit("Twitter credentials missing from YAML: " + filename)
     return data
 
@@ -44,7 +54,7 @@ def random_img_and_text(spec):
     # Did we get a JSON of filenames and descriptions? e.g.
     # {
     #  "image1.jpg": "Description 1",
-    #  "image2.jpg": "Description 2\nLine 2"
+    #  "image2.jpg": "Description 2"
     # }
 
     if len(matches) == 1 and matches[0].endswith(".json"):
@@ -124,6 +134,9 @@ def tweet_it(string, img, credentials):
 
 
 if __name__ == "__main__":
+
+    timestamp()
+
     parser = argparse.ArgumentParser(
         description="Pick a random image and tweet it",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
