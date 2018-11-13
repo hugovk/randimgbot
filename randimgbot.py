@@ -58,7 +58,7 @@ def random_img_and_text(spec):
         with open(matches[0]) as data_file:
             data = json.load(data_file)
             pprint(data)
-            random_image = random.choice(data.keys())
+            random_image = random.choice(list(data))
             text = data[random_image]
     else:
         # Pick a random image from the list
