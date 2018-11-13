@@ -76,7 +76,7 @@ def random_img_and_text(spec):
 
 
 def text_from_filename(filename):
-    """Return 'abc def' from C:\dir\abc_def.jpg"""
+    r"""Return 'abc def' from C:\dir\abc_def.jpg"""
 
     # Get filename without path
     # C:\dir\abc_def.jpg -> abc_def.jpg
@@ -146,13 +146,13 @@ if __name__ == "__main__":
         help="YAML file location containing Twitter keys and secrets")
     parser.add_argument(
         '-i', '--inspec',
-        type=unicode,
+        type=unicode if sys.version_info.major == 2 else str,  # noqa: F821
         default='M:/randomimages/*.jpg',
         help="Input file spec for directory containing images, "
              "or a JSON file of 'image filename': 'description'")
     parser.add_argument(
         '-t', '--template',
-        type=unicode,
+        type=unicode if sys.version_info.major == 2 else str,  # noqa: F821
         default='Random image: {0} #randimgbot {1}',
         help="Tweet template, where {0} will be replaced with a name taken "
              "from the filename, and {1} is a hashtag from the name")
