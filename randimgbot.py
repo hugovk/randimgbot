@@ -40,7 +40,7 @@ def random_img_and_text(spec):
     import glob
 
     # Get a list of matching images, full path
-    matches = glob.glob(spec)
+    matches = glob.glob(os.path.expanduser(spec))
 
     print("Found", len(matches))
 
