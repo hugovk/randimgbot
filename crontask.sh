@@ -5,6 +5,6 @@ cd ~/github/flagfactsflags/
 git checkout master
 git pull origin master
 
-cd ~/github/nanogenmobot/
+cd ~/github/randimgbot/
 ./update.sh
 ./run.sh
