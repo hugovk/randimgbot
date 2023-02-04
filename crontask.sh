@@ -2,8 +2,8 @@
 set -e
 
 cd ~/github/flagfactsflags/
-git checkout master
-git pull origin master
+git checkout main
+git pull origin main
 
 cd ~/github/randimgbot/
 ./update.sh
