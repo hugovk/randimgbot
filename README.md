@@ -1,16 +1,28 @@
 # randimgbot
 
 [![Test](https://github.com/hugovk/randimgbot/actions/workflows/test.yml/badge.svg)](https://github.com/hugovk/randimgbot/actions/workflows/test.yml)
-[![Python: 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
+[![Python: 3.7+](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: Black](https://img.shields.io/badge/code%20style-Black-000000.svg)](https://github.com/psf/black)
 
-Pick a random image and tweet it.
+Pick a random image and toot or tweet it.
 
 ## Example
 
-Randimgbot powers **[@FlagFacts](https://twitter.com/FlagFacts)**.
+Randimgbot powers
+**[@FlagFacts@botsin.space on Mastodon](https://botsin.space/@FlagFacts)** and
+**[@FlagFacts on Twitter](https://twitter.com/FlagFacts)**.
 
-## Set up
+## Set up Mastodon
+
+Create an account at:
+
+https://botsin.space/auth/sign_up
+
+Follow https://gist.github.com/aparrish/661fca5ce7b4882a8c6823db12d42d26 to create a
+client ID, client secret, and access token, and store in YAML file. See
+`data/randimgbot_example.yaml`.
+
+## Set up Twitter
 
 Create and authorise an app with (read and) write access at:
 
@@ -18,7 +30,7 @@ https://dev.twitter.com/apps/new
 
 Store credentials in YAML file. See `data/randimgbot_example.yaml`.
 
-Install dependencies:
+## Install dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -31,6 +43,9 @@ Call something like:
 ```bash
 python randimgbot.py -y path/to/randimgbot.yaml -i path/to/dir/full/of/images/*.jpg -t "Random thing: {0} #randomthing {1}"
 ```
+
+- Add `--mastodon` to post to Mastodon.
+- Add `--twitter` to post to Twitter.
 
 Where `{0}` will be replaced with a name taken from the filename, and `{1}` is a hashtag
 from the name. Either or both can be omitted.

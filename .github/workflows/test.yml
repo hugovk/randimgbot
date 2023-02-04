@@ -32,8 +32,12 @@ jobs:
       - name: Test run
         run: |
           python randimgbot.py --help
-          python randimgbot.py --test --yaml data/randimgbot_example.yaml --inspec data/randimgbot_example.json --chance 100000
-          python randimgbot.py --test --yaml data/randimgbot_example.yaml --inspec data/randimgbot_example.json --chance 1
+
+          python randimgbot.py --test --yaml data/randimgbot_example.yaml --inspec data/randimgbot_example.json --chance 100000 --mastodon
+          python randimgbot.py --test --yaml data/randimgbot_example.yaml --inspec data/randimgbot_example.json --chance 1      --mastodon
+
+          python randimgbot.py --test --yaml data/randimgbot_example.yaml --inspec data/randimgbot_example.json --chance 100000 --twitter
+          python randimgbot.py --test --yaml data/randimgbot_example.yaml --inspec data/randimgbot_example.json --chance 1      --twitter
 
   success:
     needs: test
