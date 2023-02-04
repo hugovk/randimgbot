@@ -2,6 +2,8 @@
 """
 Pick a random image and tweet it
 """
+from __future__ import annotations
+
 import argparse
 import datetime
 import json
@@ -16,7 +18,7 @@ from twitter import OAuth, Twitter  # pip install twitter
 
 
 def timestamp():
-    """ Print a timestamp and the filename with path """
+    """Print a timestamp and the filename with path"""
     print(datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p") + " " + __file__)
 
 
@@ -137,7 +139,6 @@ def tweet_it(string, img, credentials):
 
 
 if __name__ == "__main__":
-
     timestamp()
 
     parser = argparse.ArgumentParser(
