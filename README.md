@@ -1,19 +1,16 @@
-randimgbot
-==========
+# randimgbot
 
-[![Build Status](https://travis-ci.org/hugovk/python-ci-static-analysis.svg?branch=main)](https://travis-ci.org/hugovk/python-ci-static-analysis)
-[![Python: 3.5+](https://img.shields.io/badge/python-3.5+-blue.svg)](https://www.python.org/downloads/)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![Test](https://github.com/hugovk/randimgbot/actions/workflows/test.yml/badge.svg)](https://github.com/hugovk/randimgbot/actions/workflows/test.yml)
+[![Python: 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
+[![Code style: Black](https://img.shields.io/badge/code%20style-Black-000000.svg)](https://github.com/psf/black)
 
 Pick a random image and tweet it.
 
-Example
--------
+## Example
 
 Randimgbot powers **[@FlagFacts](https://twitter.com/FlagFacts)**.
 
-Set up
-------
+## Set up
 
 Create and authorise an app with (read and) write access at:
 
@@ -27,8 +24,7 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Run it
-------
+## Run it
 
 Call something like:
 
@@ -36,7 +32,8 @@ Call something like:
 python randimgbot.py -y path/to/randimgbot.yaml -i path/to/dir/full/of/images/*.jpg -t "Random thing: {0} #randomthing {1}"
 ```
 
-Where `{0}` will be replaced with a name taken from the filename, and `{1}` is a hashtag from the name. Either or both can be omitted.
+Where `{0}` will be replaced with a name taken from the filename, and `{1}` is a hashtag
+from the name. Either or both can be omitted.
 
 Alternatively with a JSON file:
 
@@ -53,7 +50,8 @@ Where the JSON file looks something like data/randimgbot_example.json:
 }
 ```
 
-By default it will only tweet randomly 1/12 times. Change this denominator with `--chance`.
+By default it will only tweet randomly 1/12 times. Change this denominator with
+`--chance`.
 
 Check full options with:
 
