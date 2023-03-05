@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Pick a random image and tweet it
+Pick a random image and post it
 """
 from __future__ import annotations
 
@@ -108,6 +108,7 @@ def toot_it(
     *,
     test: bool = False,
     no_web: bool = False,
+    alt_text: str = None,
 ) -> None:
     """Toot string with an image"""
     if len(status) <= 0:
@@ -133,7 +134,7 @@ def toot_it(
     if image_path:
         print("Upload image")
 
-        media = api.media_post(media_file=image_path)
+        media = api.media_post(media_file=image_path, description=alt_text)
         media_ids.append(media["id"])
 
     # No geolocation on Mastodon
@@ -225,6 +226,12 @@ def main() -> None:
         "from the filename, and {1} is a hashtag from the name",
     )
     parser.add_argument(
+        "-a",
+        "--alt",
+        help="Alt text template, where {0} will be replaced with a name taken "
+        "from the filename (Mastodon only)",
+    )
+    parser.add_argument(
         "-c",
         "--chance",
         type=int,
@@ -253,9 +260,10 @@ def main() -> None:
     hashtag = hashtagify(text)
 
     status = args.template.format(text, hashtag)
+    alt = args.alt.format(text)
     print("Post this:\n" + status)
     if args.mastodon:
-        toot_it(status, image_path, credentials, test=args.test, no_web=args.no_web)
+        toot_it(status, image_path, credentials, test=args.test, no_web=args.no_web, alt_text=alt)
     if args.twitter:
         tweet_it(status, image_path, credentials, test=args.test, no_web=args.no_web)
 
