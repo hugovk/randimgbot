@@ -260,7 +260,7 @@ def main() -> None:
     hashtag = hashtagify(text)
 
     status = args.template.format(text, hashtag)
-    alt = args.alt.format(text)
+    alt = args.alt.format(text) if args.alt else None
     print("Post this:\n" + status)
     if args.mastodon:
         toot_it(
