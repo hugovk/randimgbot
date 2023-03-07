@@ -263,7 +263,14 @@ def main() -> None:
     alt = args.alt.format(text)
     print("Post this:\n" + status)
     if args.mastodon:
-        toot_it(status, image_path, credentials, test=args.test, no_web=args.no_web, alt_text=alt)
+        toot_it(
+            status,
+            image_path,
+            credentials,
+            test=args.test,
+            no_web=args.no_web,
+            alt_text=alt,
+        )
     if args.twitter:
         tweet_it(status, image_path, credentials, test=args.test, no_web=args.no_web)
 
