@@ -1,7 +1,7 @@
 # randimgbot
 
 [![Test](https://github.com/hugovk/randimgbot/actions/workflows/test.yml/badge.svg)](https://github.com/hugovk/randimgbot/actions/workflows/test.yml)
-[![Python: 3.7+](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://www.python.org/downloads/)
+[![Python: 3.9+](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: Black](https://img.shields.io/badge/code%20style-Black-000000.svg)](https://github.com/psf/black)
 
 Pick a random image and toot it.
