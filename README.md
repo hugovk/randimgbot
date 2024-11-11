@@ -8,13 +8,13 @@ Pick a random image and toot it.
 
 ## Example
 
-Randimgbot powers **[@FlagFacts@botsin.space on Mastodon](https://mas.to/@FlagFacts)**.
+Randimgbot powers **[@FlagFacts@mas.to on Mastodon](https://mas.to/@FlagFacts)**.
 
 ## Set up Mastodon
 
 Create an account at:
 
-https://botsin.space/auth/sign_up
+https://mas.to/auth/sign_up
 
 Follow https://gist.github.com/aparrish/661fca5ce7b4882a8c6823db12d42d26 to create a
 client ID, client secret, and access token, and store in YAML file. See
