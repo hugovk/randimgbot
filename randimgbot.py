@@ -15,7 +15,6 @@ from pprint import pprint
 
 import yaml  # pip install pyyaml
 from mastodon import Mastodon  # pip install Mastodon.py
-from twitter import OAuth, Twitter  # pip install twitter
 
 
 def timestamp():
@@ -23,25 +22,18 @@ def timestamp():
     print(datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p") + " " + __file__)
 
 
-def load_yaml(filename, mastodon, twitter):
+def load_yaml(filename):
     """Load credentials from a YAML file"""
     with open(filename) as f:
         data = yaml.safe_load(f)
 
-    if mastodon and not data.keys() >= {
+    if not data.keys() >= {
         "mastodon_client_id",
         "mastodon_client_secret",
         "mastodon_access_token",
     }:
         sys.exit(f"Mastodon credentials missing from YAML: {filename}")
 
-    if twitter and not data.keys() >= {
-        "oauth_token",
-        "oauth_token_secret",
-        "consumer_key",
-        "consumer_secret",
-    }:
-        sys.exit("Twitter credentials missing from YAML: " + filename)
     return data
 
 
@@ -149,67 +141,20 @@ def toot_it(
         webbrowser.open(url, new=2)  # 2 = open in a new tab, if possible
 
 
-def tweet_it(
-    status: str,
-    image_path: str,
-    credentials: dict[str, str],
-    *,
-    test: bool = False,
-    no_web: bool = False,
-):
-    """Tweet string with an image"""
-    if len(status) <= 0:
-        return
-
-    # Create and authorise an app with (read and) write access at:
-    # https://dev.twitter.com/apps/new
-    # Store credentials in YAML file. See data/randimgbot_example.yaml
-    t = Twitter(
-        auth=OAuth(
-            credentials["oauth_token"],
-            credentials["oauth_token_secret"],
-            credentials["consumer_key"],
-            credentials["consumer_secret"],
-        )
-    )
-
-    print("TWEETING THIS:\n" + status)
-
-    if test:
-        print("(Test mode, not actually tweeting)")
-        return
-
-    with open(image_path, "rb") as image_file:
-        params = {"media[]": image_file.read(), "status": status}
-        result = t.statuses.update_with_media(**params)
-        url = (
-            "https://twitter.com/"
-            + result["user"]["screen_name"]
-            + "/status/"
-            + result["id_str"]
-        )
-        print("Tweeted:\n" + url)
-        if not no_web:
-            # 2 = open in a new tab, if possible
-            webbrowser.open(url, new=2)
-
-
 if __name__ == "__main__":
     timestamp()
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Pick a random image and tweet it",
+        description="Pick a random image and toot it",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("--mastodon", action="store_true", help="Post to Mastodon")
-    parser.add_argument("--twitter", action="store_true", help="Post to Twitter")
     parser.add_argument(
         "-y",
         "--yaml",
         default="M:/bin/data/randimgbot.yaml",
-        help="YAML file location containing Twitter keys and secrets",
+        help="YAML file location containing Mastodon keys and secrets",
     )
     parser.add_argument(
         "-i",
@@ -236,16 +181,16 @@ def main() -> None:
         "--chance",
         type=int,
         default=12,
-        help="Denominator for the chance of tweeting/tooting this time",
+        help="Denominator for the chance of tooting this time",
     )
     parser.add_argument(
-        "-x", "--test", action="store_true", help="Test mode: don't tweet/toot"
+        "-x", "--test", action="store_true", help="Test mode: don't toot"
     )
     parser.add_argument(
         "-nw",
         "--no-web",
         action="store_true",
-        help="Don't open a web browser to show the tweeted tweet/tooted toot",
+        help="Don't open a web browser to show the tooted toot",
     )
     args = parser.parse_args()
 
@@ -254,7 +199,7 @@ def main() -> None:
         print("No post this time")
         sys.exit()
 
-    credentials = load_yaml(args.yaml, args.mastodon, args.twitter)
+    credentials = load_yaml(args.yaml)
 
     image_path, text = random_img_and_text(args.inspec)
     hashtag = hashtagify(text)
@@ -262,17 +207,14 @@ def main() -> None:
     status = args.template.format(text, hashtag)
     alt = args.alt.format(text) if args.alt else None
     print("Post this:\n" + status)
-    if args.mastodon:
-        toot_it(
-            status,
-            image_path,
-            credentials,
-            test=args.test,
-            no_web=args.no_web,
-            alt_text=alt,
-        )
-    if args.twitter:
-        tweet_it(status, image_path, credentials, test=args.test, no_web=args.no_web)
+    toot_it(
+        status,
+        image_path,
+        credentials,
+        test=args.test,
+        no_web=args.no_web,
+        alt_text=alt,
+    )
 
 
 if __name__ == "__main__":

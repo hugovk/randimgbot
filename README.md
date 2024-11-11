@@ -4,13 +4,11 @@
 [![Python: 3.7+](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: Black](https://img.shields.io/badge/code%20style-Black-000000.svg)](https://github.com/psf/black)
 
-Pick a random image and toot or tweet it.
+Pick a random image and toot it.
 
 ## Example
 
-Randimgbot powers
-**[@FlagFacts@botsin.space on Mastodon](https://botsin.space/@FlagFacts)** and
-**[@FlagFacts on Twitter](https://twitter.com/FlagFacts)**.
+Randimgbot powers **[@FlagFacts@botsin.space on Mastodon](https://mas.to/@FlagFacts)**.
 
 ## Set up Mastodon
 
@@ -21,14 +19,6 @@ https://botsin.space/auth/sign_up
 Follow https://gist.github.com/aparrish/661fca5ce7b4882a8c6823db12d42d26 to create a
 client ID, client secret, and access token, and store in YAML file. See
 `data/randimgbot_example.yaml`.
-
-## Set up Twitter
-
-Create and authorise an app with (read and) write access at:
-
-https://dev.twitter.com/apps/new
-
-Store credentials in YAML file. See `data/randimgbot_example.yaml`.
 
 ## Install dependencies
 
@@ -43,9 +33,6 @@ Call something like:
 ```bash
 python randimgbot.py -y path/to/randimgbot.yaml -i path/to/dir/full/of/images/*.jpg -t "Random thing: {0} #randomthing {1}"
 ```
-
-- Add `--mastodon` to post to Mastodon.
-- Add `--twitter` to post to Twitter.
 
 Where `{0}` will be replaced with a name taken from the filename, and `{1}` is a hashtag
 from the name. Either or both can be omitted.
@@ -65,7 +52,7 @@ Where the JSON file looks something like data/randimgbot_example.json:
 }
 ```
 
-By default it will only tweet randomly 1/12 times. Change this denominator with
+By default it will only toot randomly 1/12 times. Change this denominator with
 `--chance`.
 
 Check full options with:
