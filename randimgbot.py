@@ -2,6 +2,7 @@
 """
 Pick a random image and post it
 """
+
 from __future__ import annotations
 
 import argparse
