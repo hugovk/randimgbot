@@ -1,0 +1,77 @@
+name: Toot
+
+on:
+  schedule:
+    # Hourly at :37 UTC
+    - cron: "37 * * * *"
+  workflow_dispatch:
+    inputs:
+      toot:
+        description: "Really toot (untick for a dry run)"
+        type: boolean
+        default: true
+
+env:
+  FORCE_COLOR: 1
+
+permissions: {}
+
+concurrency:
+  group: toot
+  cancel-in-progress: false
+
+jobs:
+  toot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read # to check out the repos
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check out the flags
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: hugovk/flagfactsflags
+          path: flagfactsflags
+          persist-credentials: false
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.x"
+
+      - name: Install uv
+        uses: hynek/setup-cached-uv@34e35d30f1ebc7421a5cc733bca38dcc62603960 # v2.6.0
+
+      - name: Install requirements
+        run: |
+          uv venv
+          uv pip install -r requirements.txt
+
+      - name: Toot a random flag
+        env:
+          # The contents of the credentials YAML file, see load_yaml() in randimgbot.py
+          FLAGFACTS_YAML: ${{ secrets.FLAGFACTS_YAML }}
+          SCHEDULED: ${{ github.event_name == 'schedule' }}
+          TOOT: ${{ github.event_name == 'schedule' || inputs.toot }}
+        run: |
+          yaml="$RUNNER_TEMP/flagfacts.yaml"
+          if [ -n "$FLAGFACTS_YAML" ]; then
+            printf '%s\n' "$FLAGFACTS_YAML" > "$yaml"
+          else
+            echo "::warning::FLAGFACTS_YAML secret not set, using example credentials"
+            yaml=data/randimgbot_example.yaml
+          fi
+          args=(--yaml "$yaml" --no-web --inspec "flagfactsflags/flags/*.png" --template "{0}" --alt "Flag of {0}")
+          if [ "$SCHEDULED" = "true" ]; then
+            args+=(--chance 6)
+          else
+            # Manual runs always pick a flag
+            args+=(--chance 1)
+          fi
+          if [ "$TOOT" != "true" ]; then
+            args+=(--test)
+          fi
+          uv run randimgbot.py "${args[@]}"
