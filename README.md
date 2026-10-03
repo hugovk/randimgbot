@@ -60,3 +60,11 @@ Check full options with:
 ```bash
 python randimgbot.py -h
 ```
+
+## How it runs
+
+[`toot.yml`](.github/workflows/toot.yml) runs on GitHub Actions hourly, tooting a flag
+about one time in six. The Mastodon credentials YAML is stored in the `FLAGFACTS_YAML`
+repository secret. To run it by hand, or for a dry run that doesn't toot, use "Run
+workflow" on the
+[Actions tab](https://github.com/hugovk/randimgbot/actions/workflows/toot.yml).
